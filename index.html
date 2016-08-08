@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="ZeroVidz" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+	<title>ZeroVidz</title>
+
+	<!-- CSS -->
+		<!-- lib -->
+		<link href="assets/lib/angular-material/angular-material.css" rel="stylesheet" type="text/css"/>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+		<!-- app -->
+		<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<!-- /CSS -->
+
+	<!-- HTML5 Shim -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<!--<base href="/">-->
+
+</head>
+
+<body class="ng-cloak" ng-controller="MainCtrl" ng-init="init()">
+
+	<md-toolbar layout-padding class="header" layout="row">
+		<div class="pull-left col-xs-10">
+			<h3><a href="/{{site_address}}">ZeroVidz</a></h3>
+		</div>
+	</md-toolbar>
+
+	<section layout="column"  class="container">
+
+			<div layout="row" ng-show="loading"  layout-sm="column" layout-align="space-around">
+				<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+			</div>
+
+			<md-content class="md-whiteframe-1dp" flex layout="row" layout-padding ng-hide="loading">
+				<ul flex="33">
+					<li ng-repeat="video in videos | orderBy:'-date_added'">
+						<a ng-click="loadVideo(video)">{{video.title}}</a>
+					</li>
+				</ul>	
+					<videogular flex="67" vg-auto-play="player.autoPlay" vg-player-ready="onPlayerReady($API)" vg-theme="player.theme" ng-if="player" class="{{screenSize}}" style="width:100%;">
+						<vg-media vg-src="player.sources"
+								vg-tracks="player.tracks">
+						</vg-media>
+						<vg-controls>
+							<vg-play-pause-button></vg-play-pause-button>
+							<vg-time-display>{{ currentTime | date:"mm:ss" }}</vg-time-display>
+							<vg-scrub-bar>
+								<vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+							</vg-scrub-bar>
+							<vg-time-display>{{ timeLeft | date:"mm:ss" }}</vg-time-display>
+							<vg-volume>
+								<vg-mute-button></vg-mute-button>
+								<vg-volume-bar></vg-volume-bar>
+							</vg-volume>
+							<vg-fullscreen-button ng-click="onFullScreenClick()"></vg-fullscreen-button>
+						</vg-controls>
+						<vg-overlay-play></vg-overlay-play>
+						<vg-poster vg-url="player.plugins.poster" ng-if="player.plugins"></vg-poster>
+					</videogular>
+					
+			</md-content>
+
+	</section>
+
+	<!-- JS -->
+    
+
+		<!-- angular -->
+		<script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="assets/lib/angular/angular.min.js"></script>
+	    <script type="text/javascript" src="assets/lib/angular/angular-route.min.js"></script>
+	    <script type="text/javascript" src="assets/lib/angular/angular-animate.min.js"></script>
+	    <script type="text/javascript" src="assets/lib/angular/angular-aria.min.js"></script>
+		<script type="text/javascript" src="assets/lib/angular-sanitize/angular-sanitize.min.js"></script>
+		<script type="text/javascript" src="assets/lib/angular-material/angular-material.min.js"></script>
+		<script type="text/javascript" src="assets/lib/videogular/videogular.js"></script>
+		<script type="text/javascript" src="assets/lib/videogular-controls/vg-controls.js"></script>
+		<script type="text/javascript" src="assets/lib/videogular-overlay-play/vg-overlay-play.js"></script>
+		<script type="text/javascript" src="assets/lib/videogular-poster/vg-poster.js"></script>
+		<script type="text/javascript" src="assets/lib/videogular-buffering/vg-buffering.js"></script>
+		<script type="text/javascript" src="assets/lib/moment/moment.js"></script>
+		<script type="text/javascript" src="assets/lib/angular-moment/angular-moment.min.js"></script>
+
+		<!-- zeronet -->
+		<script type="text/javascript" src="assets/lib/zeronet/ZeroFrame.js"></script>
+		<script type="text/javascript" src="assets/lib/zeronet/ZeroChat.js"></script>
+
+		<!-- page script -->
+		<script type="text/javascript">
+			var loadVideo = function(video){
+				$.getJSON('/'+video.channel+'/data/channel.json',function(data){
+					console.log(data);
+				});				
+			};
+		</script>
+		<!-- /page script -->
+
+		<!-- app -->
+		<script type="text/javascript" src="app/application.js"></script>		
+		<script type="text/javascript" src="app/core/controllers/main.ctrl.js"></script>
+
+	<!-- /JS -->  
+
+</body>
+
+</html>
